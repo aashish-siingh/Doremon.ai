@@ -1,0 +1,1 @@
+print("Hello from Doremon.ai!")\n
