@@ -1,0 +1,1 @@
+for number in range(1, 6):\n    print("Counting:", number)\n
