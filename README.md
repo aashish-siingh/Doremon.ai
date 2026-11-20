@@ -1,27 +1,30 @@
-# Doremon.ai — Interactive Learning Pocket 🤖🐍
+# Doremon.ai — Python-powered learning gadgets
 
-A free, static educational prototype with a friendly original robot teacher and interactive learning gadgets.
+Children use an interactive website with a robot teacher, Fraction Pizza, Planet Explorer, Story Spark, Brain Boost, and a Python-powered quiz service. Python is used **behind the scenes**, not taught to children.
 
-## Working features
-- **Python Playground:** edit and run real Python code in the browser using Pyodide, with output, errors, stop button, 12-second timeout, and example programs.
-- **Python Academy:** six guided lessons with hints and knowledge checks.
-- **Python Challenge:** twelve multiple-choice questions with scoring and explanations.
-- **Robot Teacher:** five prepared explanations for beginner topics.
-- **Other gadgets:** Fraction Pizza, Planet Explorer, Story Spark, and Brain Boost.
-- **Python source:** `python/quiz_engine.py` is a standalone 10-question terminal quiz; `examples/*.py` are runnable beginner programs.
+## Architecture
+- Frontend: HTML, CSS, JavaScript on GitHub Pages.
+- Backend: FastAPI in `backend/main.py`.
+- `POST /api/ask`: topic classification, curated explanations, and gadget recommendations.
+- `POST /api/quiz`: randomized questions with answers and explanations.
+- `GET /health`: health check.
 
-## Run the website
-Use a local static server such as `python3 -m http.server 8000` and open `http://localhost:8000`. Python execution requires internet access to download the Pyodide runtime from a CDN. Do not open the site directly as a `file://` URL because Web Workers may be blocked.
+## Run locally
 
-## Run the native Python quiz
 ```bash
-python3 python/quiz_engine.py
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r backend/requirements.txt
+uvicorn backend.main:app --reload --port 8001
 ```
 
-## Publish
-GitHub Pages: Settings → Pages → Deploy from a branch → main → /(root).
+In a second terminal, run `python3 -m http.server 8000` from the repository root. Visit http://localhost:8000. The browser will call the Python API at localhost:8001.
 
-## Safety and scope
-This is a prototype, not a generative AI teacher. Python runs in a disposable browser Web Worker with a 12-second timeout; it is **not** a hardened security sandbox for untrusted code. Avoid sensitive data and use adult supervision. No student accounts or personal data collection are implemented. A production children's app requires a dedicated security, accessibility, privacy, and parental-consent review.
+## Deploy
+GitHub Pages serves the frontend only. Deploy the backend separately to a Python host using `pip install -r backend/requirements.txt` and `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`. Set the backend environment variable `ALLOWED_ORIGINS` to `https://aashish-siingh.github.io`. Edit `config.js` to specify the backend's public HTTPS URL. Without a deployed backend, the existing browser-based gadgets still work, while API features show an offline message.
 
-The character is an original mascot, not an official Doraemon product.
+## Test
+Install `pytest` and `httpx`, then run `pytest backend/test_main.py`.
+
+## Scope
+The backend is functional rule-based Python, **not a generative AI model**. The prototype stores no child accounts or personal information. Production deployment for children needs safety, privacy, and security review. The mascot is original, not an official Doraemon character.
