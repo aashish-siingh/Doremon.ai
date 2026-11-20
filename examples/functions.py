@@ -1,0 +1,1 @@
+def square(number):\n    return number * number\n\nfor n in range(1, 6):\n    print(n, "squared =", square(n))\n
